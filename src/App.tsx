@@ -189,7 +189,9 @@ function App() {
       <header className="site-header">
         <nav className="nav-shell" aria-label="Primary navigation">
           <a className="brand" href="#home" aria-label="Bluephes home">
-            <span className="brand-mark">B</span>
+            <span className="brand-mark" aria-hidden="true">
+              <img src="/photo-placeholder.png" alt="" />
+            </span>
             <span>Bluephes</span>
           </a>
           <div className="nav-links">
@@ -205,13 +207,13 @@ function App() {
         <section id="home" className="hero section-panel">
           <div className="container hero-grid reveal">
             <div className="hero-copy">
-              <p className="eyebrow">Daniel, known as Bluephes</p>
-              <h1>Bluephes</h1>
+              <p className="eyebrow">Bluephes Web Development</p>
+              <h1>Send us your idea. We bring it to life.</h1>
               <p className="hero-title">Full-Stack Developer - React &middot; Node.js &middot; TypeScript</p>
-              <p className="hero-tagline">I build fast, modern web apps that solve real problems.</p>
+              <p className="hero-tagline">Share what you want to build, and I will turn it into a fast, modern web product people can actually use.</p>
               <div className="hero-actions" aria-label="Hero actions">
                 <a className="btn btn-primary" href="#projects">View Work</a>
-                <a className="btn btn-secondary" href="#contact">Contact Me</a>
+                <a className="btn btn-secondary" href="#contact">Send Your Idea</a>
               </div>
             </div>
 
@@ -293,8 +295,8 @@ function App() {
           <div className="container contact-grid reveal">
             <div className="section-heading">
               <p className="eyebrow">Contact</p>
-              <h2>Send a project inquiry.</h2>
-              <p className="section-copy">Share your email, contact number, and what you want to build.</p>
+              <h2>Send your idea and let us build it into something real.</h2>
+              <p className="section-copy">Share your email, contact number, and the product, website, or feature you have in mind.</p>
             </div>
             <div className="contact-card">
               <a className="contact-link" href="mailto:ashamudaniel4161@gmail.com">
@@ -313,7 +315,7 @@ function App() {
                 <label htmlFor="phone">Contact</label>
                 <input id="phone" name="phone" type="tel" placeholder="+234..." required />
                 <label htmlFor="message">Message</label>
-                <textarea id="message" name="message" rows={4} placeholder="Tell me what you want to build" required />
+                <textarea id="message" name="message" rows={4} placeholder="Send your idea and what you want it to do" required />
                 <button className="btn btn-primary" type="submit">Start Email</button>
                 <p className="form-status" role="status" aria-live="polite" />
               </form>
