@@ -473,6 +473,43 @@ h3 {
     flex-direction: column;
 }
 
+.live-preview-shell {
+    position: relative;
+    flex: 1;
+}
+
+.live-preview-actions {
+    position: absolute;
+    right: 1rem;
+    bottom: 1rem;
+    left: 1rem;
+    display: flex;
+    justify-content: flex-end;
+    pointer-events: none;
+}
+
+.preview-load-button {
+    border: 1px solid rgba(35, 209, 139, 0.7);
+    border-radius: 0.55rem;
+    background: rgba(7, 9, 13, 0.9);
+    color: var(--accent-strong);
+    cursor: pointer;
+    font-family: "JetBrains Mono", monospace;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 0.7rem 0.9rem;
+    pointer-events: auto;
+    text-decoration: none;
+    transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
+}
+
+.preview-load-button:hover,
+.preview-load-button:focus-visible {
+    border-color: var(--accent);
+    background: #06120d;
+    transform: translateY(-2px);
+}
+
 .live-frame-shell {
     flex: 1;
     min-height: 310px;

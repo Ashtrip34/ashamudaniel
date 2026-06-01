@@ -172,33 +172,38 @@ function LiveProjectPreview({
   title: string;
   liveUrl: string;
 }) {
-  const [showFallback, setShowFallback] = useState(type === "trustlink");
-  const [frameLoaded, setFrameLoaded] = useState(false);
-
-  useEffect(() => {
-    if (showFallback || frameLoaded) return undefined;
-
-    const fallbackTimer = window.setTimeout(() => setShowFallback(true), 6000);
-    return () => window.clearTimeout(fallbackTimer);
-  }, [frameLoaded, showFallback]);
+  const [shouldLoadFrame, setShouldLoadFrame] = useState(false);
+  const canEmbedLivePreview = type !== "trustlink";
 
   return (
     <div
-      className={`project-mockup live-project${showFallback ? " live-project-fallback" : ""}`}
+      className={`project-mockup live-project${shouldLoadFrame ? " is-loading-live" : ""}`}
       aria-label={`${title} live website preview`}
     >
       <BrowserChrome url={liveUrl} />
-      {showFallback ? (
-        <ProjectFallbackPreview type={type} title={title} />
-      ) : (
+      {shouldLoadFrame && canEmbedLivePreview ? (
         <div className="live-frame-shell">
-        <iframe
-          src={liveUrl}
-          title={`${title} live website`}
-          loading="lazy"
-          onLoad={() => setFrameLoaded(true)}
-          referrerPolicy="no-referrer-when-downgrade"
-        />
+          <iframe
+            src={liveUrl}
+            title={`${title} live website`}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+          />
+        </div>
+      ) : (
+        <div className="live-preview-shell">
+          <ProjectFallbackPreview type={type} title={title} />
+          <div className="live-preview-actions">
+            {canEmbedLivePreview ? (
+              <button className="preview-load-button" type="button" onClick={() => setShouldLoadFrame(true)}>
+                Load live preview
+              </button>
+            ) : (
+              <a className="preview-load-button" href={liveUrl} target="_blank" rel="noopener noreferrer">
+                Open live site
+              </a>
+            )}
+          </div>
         </div>
       )}
     </div>
