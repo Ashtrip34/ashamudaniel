@@ -53,12 +53,19 @@ const projects = [
   },
 ] as const;
 
-function BrowserDots() {
+function BrowserChrome({ url }: { url?: string }) {
   return (
-    <div className="mock-browser" aria-hidden="true">
-      <span />
-      <span />
-      <span />
+    <div className="mock-browser">
+      <div className="browser-dots" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      {url ? (
+        <a className="mock-url" href={url} target="_blank" rel="noopener noreferrer">
+          {url.replace(/^https?:\/\//, "")}
+        </a>
+      ) : null}
     </div>
   );
 }
@@ -66,7 +73,7 @@ function BrowserDots() {
 function TrustLinkMockup() {
   return (
     <div className="project-mockup" aria-label="TrustLink product mockup">
-      <BrowserDots />
+      <BrowserChrome />
       <div className="mock-content">
         <div className="trust-score">
           <span>Trust Score</span>
@@ -89,7 +96,7 @@ function TrustLinkMockup() {
 function TruSyncMockup() {
   return (
     <div className="project-mockup" aria-label="TruSync product mockup">
-      <BrowserDots />
+      <BrowserChrome />
       <div className="mock-dashboard">
         <div className="dashboard-stat">
           <span>New leads</span>
@@ -112,7 +119,7 @@ function TruSyncMockup() {
 function PortfolioMockup({ label }: { label: string }) {
   return (
     <div className="project-mockup" aria-label={`${label} product mockup`}>
-      <BrowserDots />
+      <BrowserChrome />
       <div className="portfolio-preview">
         <div className="preview-hero" />
         <div className="preview-grid" aria-hidden="true">
@@ -126,7 +133,32 @@ function PortfolioMockup({ label }: { label: string }) {
   );
 }
 
-function ProjectMockup({ type, title }: { type: (typeof projects)[number]["mockup"]; title: string }) {
+function LiveProjectPreview({ title, liveUrl }: { title: string; liveUrl: string }) {
+  return (
+    <div className="project-mockup live-project" aria-label={`${title} live website preview`}>
+      <BrowserChrome url={liveUrl} />
+      <div className="live-frame-shell">
+        <iframe
+          src={liveUrl}
+          title={`${title} live website`}
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+        />
+      </div>
+    </div>
+  );
+}
+
+function ProjectMockup({
+  type,
+  title,
+  liveUrl,
+}: {
+  type: (typeof projects)[number]["mockup"];
+  title: string;
+  liveUrl?: string;
+}) {
+  if (liveUrl) return <LiveProjectPreview title={title} liveUrl={liveUrl} />;
   if (type === "trustlink") return <TrustLinkMockup />;
   if (type === "trusync") return <TruSyncMockup />;
   return <PortfolioMockup label={title} />;
@@ -255,7 +287,11 @@ function App() {
             <div className="projects-grid">
               {projects.map(project => (
                 <article className="project-card" key={project.title}>
-                  <ProjectMockup type={project.mockup} title={project.title} />
+                  <ProjectMockup
+                    type={project.mockup}
+                    title={project.title}
+                    liveUrl={"liveUrl" in project ? project.liveUrl : undefined}
+                  />
                   <div className="project-content">
                     <div>
                       <h3>{project.title}</h3>
