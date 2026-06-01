@@ -1,4 +1,4 @@
-import { FormEvent, useEffect } from "react";
+import { FormEvent, useEffect, useState } from "react";
 
 const skills = [
   "React",
@@ -70,24 +70,50 @@ function BrowserChrome({ url }: { url?: string }) {
   );
 }
 
+function TrustLinkPreviewBody() {
+  return (
+    <div className="mock-content">
+      <div className="trust-score">
+        <span>Trust Score</span>
+        <strong>87</strong>
+      </div>
+      <div className="mock-lines" aria-hidden="true">
+        <span />
+        <span />
+        <span />
+      </div>
+      <div className="mock-pill-row">
+        <span>Verified seller</span>
+        <span>Deal flow</span>
+      </div>
+    </div>
+  );
+}
+
 function TrustLinkMockup() {
   return (
     <div className="project-mockup" aria-label="TrustLink product mockup">
       <BrowserChrome />
-      <div className="mock-content">
-        <div className="trust-score">
-          <span>Trust Score</span>
-          <strong>87</strong>
-        </div>
-        <div className="mock-lines" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-        </div>
-        <div className="mock-pill-row">
-          <span>Verified seller</span>
-          <span>Deal flow</span>
-        </div>
+      <TrustLinkPreviewBody />
+    </div>
+  );
+}
+
+function TruSyncPreviewBody() {
+  return (
+    <div className="mock-dashboard">
+      <div className="dashboard-stat">
+        <span>New leads</span>
+        <strong>48</strong>
+      </div>
+      <div className="dashboard-stat">
+        <span>Qualified</span>
+        <strong>19</strong>
+      </div>
+      <div className="lead-list" aria-hidden="true">
+        <span />
+        <span />
+        <span />
       </div>
     </div>
   );
@@ -97,21 +123,21 @@ function TruSyncMockup() {
   return (
     <div className="project-mockup" aria-label="TruSync product mockup">
       <BrowserChrome />
-      <div className="mock-dashboard">
-        <div className="dashboard-stat">
-          <span>New leads</span>
-          <strong>48</strong>
-        </div>
-        <div className="dashboard-stat">
-          <span>Qualified</span>
-          <strong>19</strong>
-        </div>
-        <div className="lead-list" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-        </div>
+      <TruSyncPreviewBody />
+    </div>
+  );
+}
+
+function PortfolioPreviewBody({ label }: { label: string }) {
+  return (
+    <div className="portfolio-preview">
+      <div className="preview-hero" />
+      <div className="preview-grid" aria-hidden="true">
+        <span />
+        <span />
+        <span />
       </div>
+      <div className="preview-title">{label}</div>
     </div>
   );
 }
@@ -120,31 +146,61 @@ function PortfolioMockup({ label }: { label: string }) {
   return (
     <div className="project-mockup" aria-label={`${label} product mockup`}>
       <BrowserChrome />
-      <div className="portfolio-preview">
-        <div className="preview-hero" />
-        <div className="preview-grid" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-        </div>
-        <div className="preview-title">{label}</div>
-      </div>
+      <PortfolioPreviewBody label={label} />
     </div>
   );
 }
 
-function LiveProjectPreview({ title, liveUrl }: { title: string; liveUrl: string }) {
+function ProjectFallbackPreview({
+  type,
+  title,
+}: {
+  type: (typeof projects)[number]["mockup"];
+  title: string;
+}) {
+  if (type === "trustlink") return <TrustLinkPreviewBody />;
+  if (type === "trusync") return <TruSyncPreviewBody />;
+  return <PortfolioPreviewBody label={title} />;
+}
+
+function LiveProjectPreview({
+  type,
+  title,
+  liveUrl,
+}: {
+  type: (typeof projects)[number]["mockup"];
+  title: string;
+  liveUrl: string;
+}) {
+  const [showFallback, setShowFallback] = useState(type === "trustlink");
+  const [frameLoaded, setFrameLoaded] = useState(false);
+
+  useEffect(() => {
+    if (showFallback || frameLoaded) return undefined;
+
+    const fallbackTimer = window.setTimeout(() => setShowFallback(true), 6000);
+    return () => window.clearTimeout(fallbackTimer);
+  }, [frameLoaded, showFallback]);
+
   return (
-    <div className="project-mockup live-project" aria-label={`${title} live website preview`}>
+    <div
+      className={`project-mockup live-project${showFallback ? " live-project-fallback" : ""}`}
+      aria-label={`${title} live website preview`}
+    >
       <BrowserChrome url={liveUrl} />
-      <div className="live-frame-shell">
+      {showFallback ? (
+        <ProjectFallbackPreview type={type} title={title} />
+      ) : (
+        <div className="live-frame-shell">
         <iframe
           src={liveUrl}
           title={`${title} live website`}
           loading="lazy"
+          onLoad={() => setFrameLoaded(true)}
           referrerPolicy="no-referrer-when-downgrade"
         />
-      </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -158,7 +214,7 @@ function ProjectMockup({
   title: string;
   liveUrl?: string;
 }) {
-  if (liveUrl) return <LiveProjectPreview title={title} liveUrl={liveUrl} />;
+  if (liveUrl) return <LiveProjectPreview type={type} title={title} liveUrl={liveUrl} />;
   if (type === "trustlink") return <TrustLinkMockup />;
   if (type === "trusync") return <TruSyncMockup />;
   return <PortfolioMockup label={title} />;
