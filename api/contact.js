@@ -1,5 +1,5 @@
 const CONTACT_TO_EMAIL = process.env.CONTACT_TO_EMAIL || "bluephestechnology@gmail.com";
-const CONTACT_FROM_EMAIL = process.env.CONTACT_FROM_EMAIL || "Bluephes Portfolio <onboarding@resend.dev>";
+const CONTACT_FROM_EMAIL = process.env.CONTACT_FROM_EMAIL || "bluephestechnology@gmail.com";
 
 function clean(value) {
   return String(value || "").trim();
@@ -12,6 +12,20 @@ function escapeHtml(value) {
     .replace(/>/g, "&gt;")
     .replace(/"/g, "&quot;")
     .replace(/'/g, "&#039;");
+}
+
+function formatFromEmail(value) {
+  const from = clean(value);
+
+  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(from)) {
+    return from;
+  }
+
+  if (/^.+\s<[^<>\s@]+@[^<>\s@]+\.[^<>\s@]+>$/.test(from)) {
+    return from;
+  }
+
+  return "bluephestechnology@gmail.com";
 }
 
 export default async function handler(request, response) {
@@ -62,7 +76,7 @@ export default async function handler(request, response) {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: CONTACT_FROM_EMAIL,
+      from: formatFromEmail(CONTACT_FROM_EMAIL),
       to: CONTACT_TO_EMAIL,
       reply_to: email,
       subject: `New project idea from ${name || email}`,
