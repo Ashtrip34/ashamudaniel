@@ -226,6 +226,12 @@ function ProjectMockup({
 }
 
 function App() {
+  const [formStatus, setFormStatus] = useState<{
+    message: string;
+    tone: "idle" | "success" | "error";
+  }>({ message: "", tone: "idle" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   useEffect(() => {
     const revealElements = document.querySelectorAll(".reveal");
 
@@ -251,7 +257,7 @@ function App() {
     return () => revealObserver.disconnect();
   }, []);
 
-  const handleContactSubmit = (event: FormEvent<HTMLFormElement>) => {
+  const handleContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const form = event.currentTarget;
@@ -260,21 +266,41 @@ function App() {
     const email = String(formData.get("email") ?? "").trim();
     const phone = String(formData.get("phone") ?? "").trim();
     const message = String(formData.get("message") ?? "").trim();
-    const status = form.querySelector(".form-status");
+    const website = String(formData.get("website") ?? "").trim();
 
     if (!email || !phone || !message) {
-      if (status) status.textContent = "Add your email, contact number, and message first.";
+      setFormStatus({ message: "Add your email, contact number, and message first.", tone: "error" });
       return;
     }
 
-    const subject = encodeURIComponent("Portfolio inquiry for Bluephes");
-    const body = encodeURIComponent(
-      `Name: ${name || "Not provided"}\nEmail: ${email}\nContact: ${phone}\n\nMessage:\n${message}`,
-    );
-    window.location.href = `mailto:ashamudaniel4161@gmail.com?subject=${subject}&body=${body}`;
+    setIsSubmitting(true);
+    setFormStatus({ message: "Sending your idea...", tone: "idle" });
 
-    if (status) status.textContent = "Opening your email app.";
-    form.reset();
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, phone, message, website }),
+      });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(result?.error || "Message could not be sent right now.");
+      }
+
+      setFormStatus({ message: "Message sent. I will reply from my email.", tone: "success" });
+      form.reset();
+    } catch (error) {
+      setFormStatus({
+        message: error instanceof Error ? error.message : "Message could not be sent right now.",
+        tone: "error",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -405,6 +431,8 @@ function App() {
                 <strong>+2349033583385</strong>
               </a>
               <form id="contact-form" className="contact-form" onSubmit={handleContactSubmit} noValidate>
+                <label className="form-honeypot" htmlFor="website">Website</label>
+                <input className="form-honeypot" id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
                 <label htmlFor="name">Name</label>
                 <input id="name" name="name" type="text" placeholder="Your name" />
                 <label htmlFor="email">Email</label>
@@ -413,8 +441,12 @@ function App() {
                 <input id="phone" name="phone" type="tel" placeholder="+234..." required />
                 <label htmlFor="message">Message</label>
                 <textarea id="message" name="message" rows={4} placeholder="Send your idea and what you want it to do" required />
-                <button className="btn btn-primary" type="submit">Start Email</button>
-                <p className="form-status" role="status" aria-live="polite" />
+                <button className="btn btn-primary" type="submit" disabled={isSubmitting}>
+                  {isSubmitting ? "Sending..." : "Send Message"}
+                </button>
+                <p className={`form-status form-status-${formStatus.tone}`} role="status" aria-live="polite">
+                  {formStatus.message}
+                </p>
               </form>
             </div>
           </div>

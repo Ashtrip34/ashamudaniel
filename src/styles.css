@@ -25,6 +25,7 @@ html {
 
 body {
     min-height: 100vh;
+    overflow-x: hidden;
     background:
         linear-gradient(180deg, rgba(35, 209, 139, 0.05), transparent 34rem),
         radial-gradient(circle at top right, rgba(96, 165, 250, 0.16), transparent 26rem),
@@ -174,9 +175,10 @@ h3 {
 }
 
 h1 {
-    font-size: clamp(4rem, 12vw, 8.8rem);
+    font-size: clamp(3.4rem, 9vw, 7rem);
     font-weight: 800;
     margin-bottom: 1.25rem;
+    max-width: 900px;
 }
 
 h2 {
@@ -226,6 +228,12 @@ h3 {
     padding: 0.85rem 1.15rem;
     text-decoration: none;
     transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+}
+
+.btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.68;
+    transform: none;
 }
 
 .btn:hover,
@@ -461,11 +469,13 @@ h3 {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    min-width: 0;
 }
 
 .project-mockup {
     min-height: 280px;
     background: var(--panel-strong);
+    overflow: hidden;
 }
 
 .live-project {
@@ -489,6 +499,7 @@ h3 {
 }
 
 .preview-load-button {
+    max-width: 100%;
     border: 1px solid rgba(35, 209, 139, 0.7);
     border-radius: 0.55rem;
     background: rgba(7, 9, 13, 0.9);
@@ -500,6 +511,7 @@ h3 {
     padding: 0.7rem 0.9rem;
     pointer-events: auto;
     text-decoration: none;
+    text-align: center;
     transition: border-color 180ms ease, background 180ms ease, transform 180ms ease;
 }
 
@@ -759,6 +771,14 @@ h3 {
     margin-top: 1rem;
 }
 
+.form-honeypot {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
 .contact-form input,
 .contact-form textarea {
     width: 100%;
@@ -792,6 +812,14 @@ h3 {
     min-height: 1.5rem;
     color: var(--muted);
     font-size: 0.92rem;
+}
+
+.form-status-success {
+    color: var(--accent-strong);
+}
+
+.form-status-error {
+    color: #ff9b9b;
 }
 
 .site-footer {
@@ -871,6 +899,11 @@ h3 {
         padding-top: 4.5rem;
     }
 
+    .hero-profile {
+        max-width: 520px;
+        width: 100%;
+    }
+
     .section-panel {
         padding: 5rem 0;
     }
@@ -891,7 +924,56 @@ h3 {
     }
 
     h1 {
-        font-size: clamp(3.2rem, 18vw, 4.6rem);
+        font-size: clamp(2.75rem, 15vw, 4.1rem);
+        line-height: 1.02;
+    }
+
+    h2 {
+        font-size: clamp(2rem, 11vw, 3rem);
+    }
+
+    .hero-title,
+    .hero-tagline,
+    .section-copy,
+    .project-card p,
+    .about-copy p {
+        font-size: 1rem;
+    }
+
+    .hero-actions,
+    .project-actions,
+    .footer-inner {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .hero-actions .btn,
+    .contact-form .btn {
+        width: 100%;
+    }
+
+    .hero-photo {
+        aspect-ratio: 4 / 4.65;
+    }
+
+    .mock-browser {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+
+    .mock-url {
+        width: 100%;
+    }
+
+    .live-preview-actions {
+        position: static;
+        justify-content: stretch;
+        padding: 0 1rem 1rem;
+    }
+
+    .preview-load-button {
+        width: 100%;
     }
 
     .about-card {
