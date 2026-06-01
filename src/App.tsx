@@ -172,16 +172,15 @@ function LiveProjectPreview({
   title: string;
   liveUrl: string;
 }) {
-  const [shouldLoadFrame, setShouldLoadFrame] = useState(false);
   const canEmbedLivePreview = type !== "trustlink";
 
   return (
     <div
-      className={`project-mockup live-project${shouldLoadFrame ? " is-loading-live" : ""}`}
+      className={`project-mockup live-project${canEmbedLivePreview ? " is-loading-live" : ""}`}
       aria-label={`${title} live website preview`}
     >
       <BrowserChrome url={liveUrl} />
-      {shouldLoadFrame && canEmbedLivePreview ? (
+      {canEmbedLivePreview ? (
         <div className="live-frame-shell">
           <iframe
             src={liveUrl}
@@ -194,15 +193,9 @@ function LiveProjectPreview({
         <div className="live-preview-shell">
           <ProjectFallbackPreview type={type} title={title} />
           <div className="live-preview-actions">
-            {canEmbedLivePreview ? (
-              <button className="preview-load-button" type="button" onClick={() => setShouldLoadFrame(true)}>
-                Load live preview
-              </button>
-            ) : (
-              <a className="preview-load-button" href={liveUrl} target="_blank" rel="noopener noreferrer">
-                Open live site
-              </a>
-            )}
+            <a className="preview-load-button" href={liveUrl} target="_blank" rel="noopener noreferrer">
+              Open live site
+            </a>
           </div>
         </div>
       )}
@@ -422,9 +415,9 @@ function App() {
               <p className="section-copy">Share your email, contact number, and the product, website, or feature you have in mind.</p>
             </div>
             <div className="contact-card">
-              <a className="contact-link" href="mailto:ashamudaniel4161@gmail.com">
+              <a className="contact-link" href="mailto:bluephestechnology@gmail.com">
                 <span>Email</span>
-                <strong>ashamudaniel4161@gmail.com</strong>
+                <strong>bluephestechnology@gmail.com</strong>
               </a>
               <a className="contact-link" href="https://wa.me/2349033583385" target="_blank" rel="noopener noreferrer">
                 <span>WhatsApp</span>

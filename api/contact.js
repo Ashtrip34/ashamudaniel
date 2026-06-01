@@ -1,4 +1,4 @@
-const CONTACT_TO_EMAIL = process.env.CONTACT_TO_EMAIL || "ashamudaniel4161@gmail.com";
+const CONTACT_TO_EMAIL = process.env.CONTACT_TO_EMAIL || "bluephestechnology@gmail.com";
 const CONTACT_FROM_EMAIL = process.env.CONTACT_FROM_EMAIL || "Bluephes Portfolio <onboarding@resend.dev>";
 
 function clean(value) {
